@@ -7,11 +7,14 @@
 
 import SwiftUI
 
+let env = Environment.live.appEnvironment
+
 @main
 struct GithubClientApp: App {
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            UserListView(viewModel: .init(service: env.githubService))
         }
     }
 }

@@ -22,15 +22,19 @@ class AppEnvironment {
         self.network = network
         self.secret = secret
     }
+    
+    lazy var githubService: GithubService = {
+        .init(networkService: network)
+    }()
 }
 
 extension Environment {
     var baseURL: String {
         switch self {
         case .live:
-            return "https://api.github.com"
+            return "api.github.com"
         case .mock:
-            return "https://localhost:8080"
+            return "localhost:8080"
         }
     }
     

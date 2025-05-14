@@ -32,7 +32,7 @@ extension Endpoint {
         case .userDetail(let userName):
             return "/users/\(userName)"
         case .userRepos(let userName, _):
-            return "users/\(userName)/repos"
+            return "/users/\(userName)/repos"
         case .searchUsers:
             return "/search/users"
         case .searchRepos:
@@ -103,6 +103,6 @@ extension Endpoint {
             request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         }
         
-        return nil
+        return request
     }
 }
