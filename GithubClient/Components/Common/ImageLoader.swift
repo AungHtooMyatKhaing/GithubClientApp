@@ -8,26 +8,50 @@
 import SwiftUI
 
 struct ImageLoader<PlaceholderContent: View>: View {
-    let url: URL?
-    let size: CGFloat?
-    let placeholder: PlaceholderContent?
+    private let url: URL?
+    private let size: CGFloat?
+    private let placeholder: PlaceholderContent?
+    @StateObject private var loader: ImageLoaderService
     
-    init(url: URL?, size: CGFloat? = nil, @ViewBuilder placeholder: () -> PlaceholderContent) {
+    init(
+        imageCache: ImageCacheServiceable = env.imageCache,
+        url: URL?,
+        size: CGFloat? = nil,
+        @ViewBuilder placeholder: () -> PlaceholderContent
+    ) {
+        self._loader = .init(wrappedValue: .init(imageCache: imageCache))
         self.url = url
         self.size = size
         self.placeholder = placeholder()
     }
     
     var body: some View {
-        AsyncImage(url: url) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: size, height: size)
-        } placeholder: {
-            placeholder?
-                .frame(width: size, height: size)
+        Group {
+            if let image = loader.image {
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: size, height: size)
+            } else {
+                placeholder?
+                    .frame(width: size, height: size)
+            }
         }
+        .onAppear {
+            if let urlString = url?.absoluteString {
+                loader.load(from: urlString)
+            }
+        }
+        
+//        AsyncImage(url: url) { image in
+//            image
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+//                .frame(width: size, height: size)
+//        } placeholder: {
+//            placeholder?
+//                .frame(width: size, height: size)
+//        }
     }
 }
 

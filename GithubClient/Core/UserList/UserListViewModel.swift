@@ -77,6 +77,7 @@ final class UserListViewModel: UserListViewModelProtocol {
                 
             } catch {
                 isLoading = false
+                isEmpty = true
                 print("Error:", error)
             }
         }
@@ -88,7 +89,7 @@ final class UserListViewModel: UserListViewModelProtocol {
         guard !isLoading else { return }
         
         isLoading = true
-        isSearching = false
+        isSearching = true
         
         let task = Task {
             do {
@@ -108,6 +109,7 @@ final class UserListViewModel: UserListViewModelProtocol {
                 
             } catch {
                 isLoading = false
+                isEmpty = true
                 print("Error:", error)
             }
         }

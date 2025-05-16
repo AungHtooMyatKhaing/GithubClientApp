@@ -9,54 +9,108 @@ import SwiftUI
 
 struct UserListView: View {
     
-    @ObservedObject var viewModel: UserListViewModel
+    @StateObject var viewModel: UserListViewModel
     @State private var showLoadMore: Bool = false
+    @State private var selectedUser: String? = nil
+    @FocusState var focusField: FocusField?
     
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.light.ignoresSafeArea()
                 
-                ScrollView {
-                    LazyVStack {
-                        ForEach(viewModel.users, id: \.id) { user in
-                            UserListCell(
-                                imageUrl: user.avatarUrl,
-                                userName: user.userName
-                            )
-                            .onAppear {
-                                loadMoreIfNeeded(id: user.id)
-                            }
-                        }
-                        
-                        if showLoadMore {
-                            LoadMoreView()
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 50)
-                        }
-                    }
+                VStack(spacing: 0) {
+                    navView
+                    searchView
+                    userList
                 }
                 
                 if viewModel.isEmpty {
-                    EmptySearchView()
+                    NoResultsView(type: .searchNoUser)
                 }
-                
             }
-            .searchable(
-                text: $viewModel.search,
-                prompt: "Search by github user name"
-            )
             .refreshable {
                 viewModel.refresh()
             }
-            .navigationTitle("Users")
+            .onAppear {
+                viewModel.fetchUsers()
+            }
+            .toolbarVisibility(.hidden, for: .navigationBar)
+            .navigationDestination(item: $selectedUser) { user in
+                UserDetailView(
+                    viewModel: .init(
+                        userName: user,
+                        service: env.githubService
+                    )
+                )
+            }
+        }
+    }
+}
+
+#Preview {
+    UserListView(viewModel: .init(service: env.githubService))
+}
+
+extension UserListView {
+    private var navView: some View {
+        CustomNavView(
+            title: "Users",
+            hideDivider: true,
+            leftIcon: nil
+        )
+    }
+    
+    private var searchView: some View {
+        CustomTextField(
+            text: $viewModel.search,
+            placeHolder: "Search by github user name",
+            focusField: .search,
+            focusedField: $focusField,
+            rightIcon: focusField == .search ? "xmark" : "magnifyingglass",
+            rightAction: {
+                if focusField == .search {
+                    focusField = nil
+                    viewModel.search = ""
+                } else {
+                    focusField = .search
+                }
+            }
+        )
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 16)
+        .padding(.bottom, 16)
+    }
+    
+    private var userList: some View {
+        ScrollView {
+            LazyVStack {
+                ForEach(viewModel.users, id: \.id) { user in
+                    UserListCell(
+                        imageUrl: user.avatarUrl,
+                        userName: user.userName
+                    )
+                    .onTapGesture {
+                        selectedUser = user.userName
+                    }
+                    .onAppear {
+                        loadMoreIfNeeded(id: user.id)
+                    }
+                }
+                
+                if showLoadMore {
+                    LoadMoreView()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                }
+            }
         }
     }
     
     private func loadMoreIfNeeded(id: Int?) {
         // load more will only show
         // - it is last item
-        // - not already loading
+        // - haven't already loading
         // - and has next page
         guard viewModel.isLastItem(id: id), !viewModel.isLoading, viewModel.hasNextPage else {
             guard showLoadMore, !viewModel.isLoading else { return }
@@ -66,8 +120,4 @@ struct UserListView: View {
         showLoadMore = true
         viewModel.nextPage()
     }
-}
-
-#Preview {
-    UserListView(viewModel: .init(service: env.githubService))
 }

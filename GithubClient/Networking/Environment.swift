@@ -16,11 +16,13 @@ class AppEnvironment {
     let environment: Environment
     let network: Networkable
     let secret: Secretable
+    let imageCache: ImageCacheServiceable
     
-    init(environment: Environment, network: Networkable, secret: Secretable) {
+    init(environment: Environment, network: Networkable, secret: Secretable, imageCache: ImageCacheServiceable) {
         self.environment = environment
         self.network = network
         self.secret = secret
+        self.imageCache = imageCache
     }
     
     lazy var githubService: GithubService = {
@@ -44,14 +46,16 @@ extension Environment {
             return .init(
                 environment: .live,
                 network: NetworkService(environment: .live),
-                secret: ConfigLoaderService()
+                secret: ConfigLoaderService(),
+                imageCache: ImageCacheService()
             )
             
         case .mock:
             return .init(
                 environment: .mock,
                 network: NetworkService(environment: .mock),
-                secret: ConfigLoaderService()
+                secret: ConfigLoaderService(),
+                imageCache: ImageCacheService()
             )
         }
     }

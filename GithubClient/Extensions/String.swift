@@ -22,6 +22,7 @@ extension String {
     /// convert string to date
     func toDate(_ format: DateFormat) -> Date? {
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = format.rawValue
         return formatter.date(from: self)
     }

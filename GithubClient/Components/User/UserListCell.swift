@@ -21,18 +21,19 @@ struct UserListCell: View {
             .clipShape(Circle())
             .overlay {
                 Circle()
-                    .stroke(.lightGray, lineWidth: 2)
+                    .stroke(.softGray, lineWidth: 2)
             }
             
             if let userName {
                 Text(userName)
-                    .font(.body)
+                    .font(.poppinsRegular(size: 17))
                     .foregroundColor(.dark)
                     .frame(maxWidth: .infinity, alignment: .leading)
             } else {
                 Spacer()
             }
         }
+        .background(.light.opacity(0.001))
         .frame(height: 70)
         .padding(.horizontal, 20)
     }

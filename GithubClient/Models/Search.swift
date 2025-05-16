@@ -15,9 +15,47 @@ enum SortBy: String, Encodable {
     case updated
 }
 
+extension SortBy {
+    var title: String {
+        switch self {
+        case .followers:
+            return "Followers"
+        case .repositories:
+            return "Repositories"
+        case .joined:
+            return "Joined"
+        case .stars:
+            return "Stars"
+        case .forks:
+            return "Forks"
+        case .helpWantedIssues:
+            return "Help Wanted"
+        case .updated:
+            return "Updated"
+        }
+    }
+}
+
 enum OrderBy: String, Encodable {
     case desc
     case asc
+}
+
+extension OrderBy {
+    var imageName: String {
+        switch self {
+        case .desc:
+            return "arrow.down"
+        case .asc:
+            return "arrow.up"
+        }
+    }
+}
+
+enum ForkStatus: String, Encodable {
+    case `true`
+    case `false`
+    case only
 }
 
 // /search/users [GET]
@@ -37,9 +75,21 @@ struct SearchRequest: Encodable {
         self.page = page
     }
     
-    init(repoName: String?, userName: String?, sort: SortBy? = nil, order: OrderBy? = nil, limit: Int = 30, page: Int = 1) {
+    init(repoName: String? = nil, userName: String?, sort: SortBy? = nil, order: OrderBy? = nil, fork: ForkStatus? = nil, limit: Int = 30, page: Int = 1) {
         
-        let query = "\(repoName.orEmpty) in:name in:description user: \(userName.orEmpty)"
+        var query = ""
+        
+        if let repoName {
+            query += "\(repoName) "
+        }
+        
+        if let userName {
+            query += "user:\(userName) "
+        }
+        
+        if let fork {
+            query += "fork:\(fork.rawValue) "
+        }
         
         self.init(
             query: query,

@@ -32,6 +32,7 @@ struct User: Decodable, Equatable {
     let id: Int?
     let nodeId: String?
     let avatarUrl: String?
+    let htmlUrl: String?
     let type: String?
     let userViewType: String?
     let name: String?
@@ -48,6 +49,7 @@ struct User: Decodable, Equatable {
         id: Int?,
         nodeId: String? = nil,
         avatarUrl: String? = nil,
+        htmlUrl: String? = nil,
         type: String? = nil,
         userViewType: String? = nil,
         name: String? = nil,
@@ -63,6 +65,7 @@ struct User: Decodable, Equatable {
         self.id = id
         self.nodeId = nodeId
         self.avatarUrl = avatarUrl
+        self.htmlUrl = htmlUrl
         self.type = type
         self.userViewType = userViewType
         self.name = name
@@ -80,6 +83,7 @@ struct User: Decodable, Equatable {
         case id
         case nodeId = "node_id"
         case avatarUrl = "avatar_url"
+        case htmlUrl = "html_url"
         case type
         case userViewType = "user_view_type"
         case name

@@ -36,7 +36,7 @@ final class NetworkService: Networkable {
         guard let request = endpoint.urlRequest(appEnvironment: envorinment.appEnvironment) else {
             throw NetworkError.invalidURL
         }
-        print(3, Thread.isMainThread, #function)
+        
         // data request
         let (data, response) = try await session.data(for: request)
         
