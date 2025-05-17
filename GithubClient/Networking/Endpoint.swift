@@ -24,6 +24,25 @@ enum Endpoint {
     case searchRepos(Encodable)
 }
 
+extension Endpoint: Equatable {
+    static func == (lhs: Endpoint, rhs: Endpoint) -> Bool {
+        switch (lhs, rhs) {
+        case (.users, .users):
+            return true
+        case (.userDetail(let lhsUserName), .userDetail(let rhsUserName)):
+            return lhsUserName == rhsUserName
+        case (.userRepos(let lhsUserName, _), .userRepos(let rhsUserName, _)):
+            return lhsUserName == rhsUserName
+        case (.searchUsers, .searchUsers):
+            return true
+        case (.searchRepos, .searchRepos):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 extension Endpoint {
     var path: String {
         switch self {

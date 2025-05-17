@@ -19,6 +19,25 @@ enum NetworkError: Error {
     case invalidDecode(Error)
 }
 
+extension NetworkError: Equatable {
+    static func == (lhs: NetworkError, rhs: NetworkError) -> Bool {
+        switch (lhs, rhs) {
+        case (.invalidURL, .invalidURL):
+            return true
+        case (.invalidResponse, .invalidResponse):
+            return true
+        case (.invalidStatus(let lhsCode), .invalidStatus(let rhsCode)):
+            return lhsCode == rhsCode
+        case (.commonError(let lhsError), .commonError(let rhsError)):
+            return lhsError.status == rhsError.status
+        case (.invalidDecode( _), .invalidDecode( _)):
+            return true
+        default:
+            return false
+        }
+    }
+}
+
 final class NetworkService: Networkable {
     
     private let envorinment: Environment

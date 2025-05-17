@@ -32,7 +32,7 @@ struct UserListView: View {
             .refreshable {
                 viewModel.refresh()
             }
-            .onAppear {
+            .onFirstAppear {
                 viewModel.fetchUsers()
             }
             .toolbarVisibility(.hidden, for: .navigationBar)
@@ -67,9 +67,9 @@ extension UserListView {
             placeHolder: "Search by github user name",
             focusField: .search,
             focusedField: $focusField,
-            rightIcon: focusField == .search ? "xmark" : "magnifyingglass",
+            rightIcon: viewModel.search != "" ? "xmark" : "magnifyingglass",
             rightAction: {
-                if focusField == .search {
+                if viewModel.search != "" {
                     focusField = nil
                     viewModel.search = ""
                 } else {
@@ -77,6 +77,7 @@ extension UserListView {
                 }
             }
         )
+        .accessibilityIdentifier("SearchTextField")
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 16)
         .padding(.bottom, 16)
@@ -103,6 +104,10 @@ extension UserListView {
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                 }
+            }
+            .trackScrollY { _ in
+                // dismiss keyboard when user is scrolling
+                focusField = nil
             }
         }
     }

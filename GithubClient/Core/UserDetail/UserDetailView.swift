@@ -141,9 +141,14 @@ extension UserDetailView {
                 Image(systemName: viewModel.orderBy.imageName)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 13, height: 13)
+                    .frame(width: 10, height: 10)
                     .foregroundStyle(.blue)
-                    .padding(5)
+                    .padding(9)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 3)
+                            .stroke(lineWidth: 1)
+                            .foregroundStyle(.blue)
+                    }
             }
         }
     }

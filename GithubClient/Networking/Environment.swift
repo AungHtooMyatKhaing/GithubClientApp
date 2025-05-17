@@ -53,7 +53,7 @@ extension Environment {
         case .mock:
             return .init(
                 environment: .mock,
-                network: NetworkService(environment: .mock),
+                network: MockNetworkService(),
                 secret: ConfigLoaderService(),
                 imageCache: ImageCacheService()
             )

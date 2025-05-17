@@ -55,6 +55,12 @@ struct Repository: Decodable {
     }
 }
 
+extension Repository: Equatable {
+    static func == (lhs: Repository, rhs: Repository) -> Bool {
+        lhs.id == rhs.id
+    }
+}
+
 struct License: Decodable {
     let key: String?
     let name: String?

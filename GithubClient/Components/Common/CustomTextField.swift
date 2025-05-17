@@ -15,7 +15,6 @@ struct CustomTextField: View {
     
     @Binding var text: String
     var placeHolder: String?
-//    var keyboardType: UIKeyboardType = .default
     var focusField: FocusField?
     @FocusState.Binding var focusedField: FocusField?
     var multilineTextAlignment: TextAlignment = .leading
@@ -39,7 +38,7 @@ struct CustomTextField: View {
                 .foregroundStyle(.softGray)
                 .frame(height: 43)
                 .padding(.leading, multilineTextAlignment == .center ? 0 : 12)
-//                .keyboardType(keyboardType)
+                .autocorrectionDisabled()
                 .focused($focusedField, equals: focusField)
                 .onChange(of: focusedField) { _, _ in
                     isFocused()
