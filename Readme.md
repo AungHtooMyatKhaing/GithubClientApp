@@ -24,7 +24,6 @@ The project follows a clean architecture approach with:
 - Fast image loading with local cache
 - Secure access token handling via .xcconfig
 - Comprehensive unit & UI test coverage
-- Secure credential management
 
 
 ## Project Structure
