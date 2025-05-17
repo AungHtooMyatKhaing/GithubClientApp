@@ -22,4 +22,5 @@ struct ErrorItem: Decodable {
     let resource: String?
     let field: String?
     let code: String?
+    let message: String?
 }

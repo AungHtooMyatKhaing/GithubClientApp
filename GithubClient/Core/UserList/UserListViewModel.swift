@@ -16,6 +16,7 @@ protocol UserListViewModelProtocol: ObservableObject {
     var isSearching: Bool { get }
     var isLoading: Bool { get }
     var isEmpty: Bool { get }
+    var error: String? { get }
     
     func fetchUsers()
     func searchUsers()
@@ -30,11 +31,13 @@ final class UserListViewModel: UserListViewModelProtocol {
     // MARK: - Published Perperties
     
     @Published private(set) var users: [User] = []
-    @Published var search: String = ""
     @Published private(set) var hasNextPage: Bool = false
     @Published private(set) var isSearching: Bool = false
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var isEmpty: Bool = false
+    
+    @Published var search: String = ""
+    @Published var error: String? = nil
     
     // MARK: - Private Properties
     
@@ -58,10 +61,10 @@ final class UserListViewModel: UserListViewModelProtocol {
         
         isLoading = true
         isSearching = false
+        error = nil
         
         let task = Task {
             do {
-                
                 let response = try await service.users(request: fetchUserRequest)
                 let fetchedUsers = response.value ?? []
                 
@@ -76,9 +79,7 @@ final class UserListViewModel: UserListViewModelProtocol {
                 self.updateState(hasNextPage: response.hasNextPage)
                 
             } catch {
-                isLoading = false
-                isEmpty = true
-                print("Error:", error)
+                self.handleError(error: error)
             }
         }
         
@@ -90,10 +91,10 @@ final class UserListViewModel: UserListViewModelProtocol {
         
         isLoading = true
         isSearching = true
+        error = nil
         
         let task = Task {
             do {
-                
                 let response = try await service.searchUsers(request: searchUserRequest)
                 let searchedUsers = response.value?.items ?? []
                 
@@ -108,9 +109,7 @@ final class UserListViewModel: UserListViewModelProtocol {
                 self.updateState(hasNextPage: response.hasNextPage)
                 
             } catch {
-                isLoading = false
-                isEmpty = true
-                print("Error:", error)
+                self.handleError(error: error)
             }
         }
         
@@ -169,9 +168,22 @@ final class UserListViewModel: UserListViewModelProtocol {
             .store(in: &cancellables)
     }
     
+    private func handleError(error: Error) {
+        if let networkError = error as? NetworkError {
+            self.error = networkError.message
+        } else {
+            self.error = error.localizedDescription
+        }
+        
+        self.isLoading = false
+        self.isEmpty = true
+        print("Error: \(error)")
+    }
+    
     private func updateState(hasNextPage: Bool) {
         self.hasNextPage = hasNextPage
         self.isEmpty = self.users.isEmpty
         self.isLoading = false
+        self.error = nil
     }
 }

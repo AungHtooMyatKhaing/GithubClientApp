@@ -17,6 +17,7 @@ protocol UserDetailViewModelProtocol: ObservableObject {
     var hasNextPage: Bool { get }
     var isLoading: Bool { get }
     var isEmpty: Bool { get }
+    var error: String? { get }
     
     func fetchDetail()
     func fetchRepos()
@@ -37,11 +38,13 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
     
     @Published private(set) var detail: UserDetailHeaderViewModel? = nil
     @Published private(set) var repos: [RepoListCellViewModel] = []
-    @Published var sortBy: SortBy = .updated
-    @Published var orderBy: OrderBy = .desc
     @Published private(set) var hasNextPage: Bool = false
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var isEmpty: Bool = false
+    
+    @Published var sortBy: SortBy = .updated
+    @Published var orderBy: OrderBy = .desc
+    @Published var error: String? = nil
     
     // MARK: - Private Properties
     
@@ -65,6 +68,7 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
     func fetchDetail() {
         guard !isLoading else { return }
         isLoading = true
+        error = nil
         
         let task = Task {
             
@@ -105,9 +109,7 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
                         }
                     }
                 } catch {
-                    isLoading = false
-                    isEmpty = true
-                    print("Error:", error)
+                    handleError(error: error)
                 }
                 
                 // send back fetched data as turple
@@ -154,8 +156,7 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
                 self.updateState(hasNextPage: response.hasNextPage)
                 
             } catch {
-                isLoading = false
-                print("Error:", error)
+                handleError(error: error)
             }
         }
         
@@ -208,6 +209,18 @@ final class UserDetailViewModel: UserDetailViewModelProtocol {
                 self.fetchRepos()
             }
             .store(in: &cancellables)
+    }
+    
+    private func handleError(error: Error) {
+        if let networkError = error as? NetworkError {
+            self.error = networkError.message
+        } else {
+            self.error = error.localizedDescription
+        }
+        
+        self.isLoading = false
+        self.isEmpty = repos.count == 0
+        print("Error: \(error)")
     }
     
     private func updateState(hasNextPage: Bool) {

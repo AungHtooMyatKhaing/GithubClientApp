@@ -71,6 +71,15 @@ struct UserDetailView: View {
         .onFirstAppear {
             viewModel.fetchDetail()
         }
+        .alert("Oops!", isPresented: .constant(viewModel.error != nil)) {
+            Button("OK") {
+                viewModel.error = nil
+            }
+        } message: {
+            if let error = viewModel.error {
+                Text(error)
+            }
+        }
     }
 }
 
