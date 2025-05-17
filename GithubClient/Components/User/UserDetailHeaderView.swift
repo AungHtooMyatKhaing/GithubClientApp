@@ -49,6 +49,15 @@ struct UserDetailHeaderViewModel {
 struct UserDetailHeaderView: View {
     
     let viewModel: UserDetailHeaderViewModel
+    let onTapUrl: ((String) -> ())?
+    
+    init(
+        viewModel: UserDetailHeaderViewModel,
+        onTapUrl: ((String) -> ())? = nil
+    ) {
+        self.viewModel = viewModel
+        self.onTapUrl = onTapUrl
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 17) {
@@ -145,6 +154,10 @@ extension UserDetailHeaderView {
             
             if let github = viewModel.githubProfileLink {
                 infoView(imageName: "link", value: github)
+                    .foregroundStyle(.link)
+                    .onTapGesture {
+                        onTapUrl?(github)
+                    }
             }
             
         }

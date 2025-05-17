@@ -12,6 +12,7 @@ struct UserDetailView: View {
     @StateObject var viewModel: UserDetailViewModel
     @State private var showLoadMore: Bool = false
     @State private var showFilter: Bool = false
+    @State private var selectedUrl: String? = nil
     
     var body: some View {
         ZStack {
@@ -20,8 +21,9 @@ struct UserDetailView: View {
             ScrollView {
                 LazyVStack {
                     if let detail = viewModel.detail {
-                        UserDetailHeaderView(viewModel: detail)
-                            .padding(.top, 35)
+                        UserDetailHeaderView(viewModel: detail, onTapUrl: { url in
+                            selectedUrl = url
+                        }).padding(.top, 35)
                     }
                     
                     if viewModel.repos.count > 0 {
@@ -35,6 +37,9 @@ struct UserDetailView: View {
                     
                     ForEach(viewModel.repos, id: \.id) { repo in
                         RepoListCell(viewModel: repo)
+                            .onTapGesture {
+                                selectedUrl = repo.githubLink
+                            }
                             .onAppear {
                                 loadMoreIfNeeded(id: repo.id)
                             }
@@ -56,11 +61,14 @@ struct UserDetailView: View {
             }
         }
         .toolbarVisibility(.hidden, for: .navigationBar)
-        .sheet(isPresented: $showFilter, content: {
+        .sheet(isPresented: $showFilter) {
             FilterOptionView(selected: $viewModel.sortBy)
                 .presentationDetents([.height(180)])
-        })
-        .onAppear {
+        }
+        .navigationDestination(item: $selectedUrl) { url in
+            RepoDetailView(url: url)
+        }
+        .onFirstAppear {
             viewModel.fetchDetail()
         }
     }

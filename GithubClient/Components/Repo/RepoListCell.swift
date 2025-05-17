@@ -50,6 +50,7 @@ struct RepoListCell: View {
         }
         .padding(.vertical, 6)
         .foregroundStyle(.softGray)
+        .background(.light.opacity(0.001))
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

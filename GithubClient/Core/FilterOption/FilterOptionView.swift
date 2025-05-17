@@ -15,7 +15,7 @@ struct FilterOptionView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            CustomNavView(title: "Sort by", hideDivider: true, leftIcon: "xmark")
+            CustomNavView(title: "Sort by", backgroundColor: .clear, hideDivider: true, leftIcon: "xmark")
                 .frame(height: 70)
 
             ForEach(sortBy, id: \.self) { item in
