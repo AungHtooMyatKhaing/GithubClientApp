@@ -35,6 +35,8 @@
 		B56974B02DD71ECF00F7FED9 /* CustomTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B56974AF2DD71ECF00F7FED9 /* CustomTextField.swift */; };
 		B5756BD52DD8ADEE0090E352 /* MockGithubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5756BD42DD8ADEE0090E352 /* MockGithubService.swift */; };
 		B5756BD72DD8AE4B0090E352 /* GithubServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5756BD62DD8AE4B0090E352 /* GithubServiceTests.swift */; };
+		B5769EDD2DDF234300E89074 /* RoutingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5769EDC2DDF234300E89074 /* RoutingCoordinator.swift */; };
+		B5769EE12DDF53E700E89074 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5769EE02DDF53E700E89074 /* RootView.swift */; };
 		B578D0802DD4559600B1C294 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578D07F2DD4559600B1C294 /* ImageLoader.swift */; };
 		B578D0842DD45A5300B1C294 /* UserListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578D0832DD45A5300B1C294 /* UserListCell.swift */; };
 		B578D0862DD4D11600B1C294 /* LoadMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B578D0852DD4D11600B1C294 /* LoadMoreView.swift */; };
@@ -118,6 +120,8 @@
 		B56974AF2DD71ECF00F7FED9 /* CustomTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTextField.swift; sourceTree = "<group>"; };
 		B5756BD42DD8ADEE0090E352 /* MockGithubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockGithubService.swift; sourceTree = "<group>"; };
 		B5756BD62DD8AE4B0090E352 /* GithubServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GithubServiceTests.swift; sourceTree = "<group>"; };
+		B5769EDC2DDF234300E89074 /* RoutingCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingCoordinator.swift; sourceTree = "<group>"; };
+		B5769EE02DDF53E700E89074 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		B578D07F2DD4559600B1C294 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		B578D0832DD45A5300B1C294 /* UserListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserListCell.swift; sourceTree = "<group>"; };
 		B578D0852DD4D11600B1C294 /* LoadMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadMoreView.swift; sourceTree = "<group>"; };
@@ -224,6 +228,7 @@
 			children = (
 				B55476BD2DD3E45100D206DF /* Info.plist */,
 				B55476882DD332BF00D206DF /* Core */,
+				B5769EDE2DDF234E00E89074 /* Coordinators */,
 				B554768D2DD3330B00D206DF /* Models */,
 				B55476892DD332D200D206DF /* Networking */,
 				B554768E2DD3335500D206DF /* Services */,
@@ -263,6 +268,7 @@
 		B55476882DD332BF00D206DF /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				B5769EDF2DDF53CD00E89074 /* Root */,
 				B50B53B22DD4424B0092CBFD /* UserList */,
 				B5C163AA2DD5F43900CEC22B /* UserDetail */,
 				B51639EC2DD7C42D00A4EE48 /* RepoDetail */,
@@ -343,6 +349,22 @@
 				B56974AD2DD6E3F800F7FED9 /* FilterOptionView.swift */,
 			);
 			path = FilterOption;
+			sourceTree = "<group>";
+		};
+		B5769EDE2DDF234E00E89074 /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				B5769EDC2DDF234300E89074 /* RoutingCoordinator.swift */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		B5769EDF2DDF53CD00E89074 /* Root */ = {
+			isa = PBXGroup;
+			children = (
+				B5769EE02DDF53E700E89074 /* RootView.swift */,
+			);
+			path = Root;
 			sourceTree = "<group>";
 		};
 		B578D0812DD4598900B1C294 /* Common */ = {
@@ -594,8 +616,10 @@
 				B5C164972DD658FB00CEC22B /* LineDivider.swift in Sources */,
 				B55476B72DD3C76300D206DF /* Date.swift in Sources */,
 				B56974AB2DD6DF8C00F7FED9 /* CustomNavView.swift in Sources */,
+				B5769EDD2DDF234300E89074 /* RoutingCoordinator.swift in Sources */,
 				B55476AD2DD3949A00D206DF /* User.swift in Sources */,
 				B55476B92DD3CDD200D206DF /* Optional.swift in Sources */,
+				B5769EE12DDF53E700E89074 /* RootView.swift in Sources */,
 				B50B53B62DD442B50092CBFD /* UserListViewModel.swift in Sources */,
 				B554767B2DD314F900D206DF /* GithubClientApp.swift in Sources */,
 				B55476BB2DD3D01D00D206DF /* Search.swift in Sources */,

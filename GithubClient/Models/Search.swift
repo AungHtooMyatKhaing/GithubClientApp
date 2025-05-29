@@ -5,7 +5,7 @@
 //  Created by Aung Htoo Myat Khaing on 14/05/2025.
 //
 
-enum SortBy: String, Encodable {
+enum SortBy: String, Encodable, Hashable {
     case followers
     case repositories
     case joined

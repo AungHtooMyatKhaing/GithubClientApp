@@ -11,8 +11,9 @@ struct UserDetailView: View {
     
     @StateObject var viewModel: UserDetailViewModel
     @State private var showLoadMore: Bool = false
-    @State private var showFilter: Bool = false
-    @State private var selectedUrl: String? = nil
+//    @State private var showFilter: Bool = false
+//    @State private var selectedUrl: String? = nil
+    @EnvironmentObject var coordinator: AppCoordinator
     
     var body: some View {
         ZStack {
@@ -22,7 +23,8 @@ struct UserDetailView: View {
                 LazyVStack {
                     if let detail = viewModel.detail {
                         UserDetailHeaderView(viewModel: detail, onTapUrl: { url in
-                            selectedUrl = url
+//                            selectedUrl = url
+                            coordinator.routeToRepoDetail(url: url)
                         }).padding(.top, 35)
                     }
                     
@@ -38,7 +40,8 @@ struct UserDetailView: View {
                     ForEach(viewModel.repos, id: \.id) { repo in
                         RepoListCell(viewModel: repo)
                             .onTapGesture {
-                                selectedUrl = repo.githubLink
+//                                selectedUrl = repo.githubLink
+                                coordinator.routeToRepoDetail(url: repo.githubLink)
                             }
                             .onAppear {
                                 loadMoreIfNeeded(id: repo.id)
@@ -61,30 +64,38 @@ struct UserDetailView: View {
             }
         }
         .toolbarVisibility(.hidden, for: .navigationBar)
-        .sheet(isPresented: $showFilter) {
-            FilterOptionView(selected: $viewModel.sortBy)
-                .presentationDetents([.height(180)])
-        }
-        .navigationDestination(item: $selectedUrl) { url in
-            RepoDetailView(url: url)
-        }
+//        .sheet(isPresented: $showFilter) {
+//            FilterOptionView(selected: $viewModel.sortBy)
+//                .presentationDetents([.height(180)])
+//        }
+//        .navigationDestination(item: $selectedUrl) { url in
+//            RepoDetailView(url: url)
+//        }
         .onFirstAppear {
             viewModel.fetchDetail()
         }
-        .alert("Oops!", isPresented: .constant(viewModel.error != nil)) {
-            Button("OK") {
-                viewModel.error = nil
-            }
-        } message: {
-            if let error = viewModel.error {
-                Text(error)
-            }
+//        .alert("Oops!", isPresented: .constant(viewModel.error != nil)) {
+//            Button("OK") {
+//                viewModel.error = nil
+//            }
+//        } message: {
+//            if let error = viewModel.error {
+//                Text(error)
+//            }
+//        }
+        .onChange(of: viewModel.error) { _, newValue in
+            coordinator.showAlert(message: .init(message: newValue))
         }
     }
 }
 
 #Preview {
-    UserDetailView(viewModel: .init(userName: "achille-roussel", service: env.githubService))
+    @Previewable @StateObject var appCoordinator = AppCoordinator()
+    
+    NavigationStack(path: $appCoordinator.path) {
+        UserDetailView(viewModel: .init(userName: "achille-roussel", service: env.githubService))
+    }
+    .environmentObject(appCoordinator)
 }
 
 extension UserDetailView {
@@ -163,7 +174,8 @@ extension UserDetailView {
     }
     
     private func toggleSortBy() {
-        showFilter = true
+//        showFilter = true
+        coordinator.routeToFileOptions(sort: $viewModel.sortBy)
     }
     
     private func toggleOrderBy() {

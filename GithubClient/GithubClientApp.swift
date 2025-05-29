@@ -14,7 +14,7 @@ struct GithubClientApp: App {
     
     var body: some Scene {
         WindowGroup {
-            UserListView(viewModel: .init(service: env.githubService))
+            RootView()
         }
     }
 }

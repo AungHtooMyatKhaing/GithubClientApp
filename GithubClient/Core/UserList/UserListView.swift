@@ -11,11 +11,12 @@ struct UserListView: View {
     
     @StateObject var viewModel: UserListViewModel
     @State private var showLoadMore: Bool = false
-    @State private var selectedUser: String? = nil
+//    @State private var selectedUser: String? = nil
     @FocusState var focusField: FocusField?
+    @EnvironmentObject var coordinator: AppCoordinator
     
     var body: some View {
-        NavigationStack {
+//        NavigationStack {
             ZStack {
                 Color.light.ignoresSafeArea()
                 
@@ -36,29 +37,35 @@ struct UserListView: View {
                 viewModel.fetchUsers()
             }
             .toolbarVisibility(.hidden, for: .navigationBar)
-            .navigationDestination(item: $selectedUser) { user in
-                UserDetailView(
-                    viewModel: .init(
-                        userName: user,
-                        service: env.githubService
-                    )
-                )
+            .onChange(of: viewModel.error) { _, newValue in
+                coordinator.showAlert(message: .init(message: newValue))
             }
-            .alert("Oops!", isPresented: .constant(viewModel.error != nil)) {
-                Button("OK") {
-                    viewModel.error = nil
-                }
-            } message: {
-                if let error = viewModel.error {
-                    Text(error)
-                }
-            }
-        }
+//            .navigationDestination(item: $selectedUser) { user in
+//                UserDetailView(
+//                    viewModel: .init(
+//                        userName: user,
+//                        service: env.githubService
+//                    )
+//                )
+//            }
+//            .alert("Oops!", isPresented: .constant(viewModel.error != nil)) {
+//                Button("OK") {
+//                    viewModel.error = nil
+//                }
+//            } message: {
+//                if let error = viewModel.error {
+//                    Text(error)
+//                }
+//            }
+//        }
     }
 }
 
 #Preview {
+    @Previewable @StateObject var appCoordinator = AppCoordinator()
+    
     UserListView(viewModel: .init(service: env.githubService))
+        .environmentObject(appCoordinator)
 }
 
 extension UserListView {
@@ -101,7 +108,8 @@ extension UserListView {
                         userName: user.userName
                     )
                     .onTapGesture {
-                        selectedUser = user.userName
+                        coordinator.routeToUserDetail(userName: user.userName)
+//                        selectedUser = user.userName
                     }
                     .onAppear {
                         loadMoreIfNeeded(id: user.id)
